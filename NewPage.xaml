@@ -12,20 +12,22 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
+
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Button Grid.Column="1" Grid.Row="1" Content="Ukaž" Click="Button_Click"/>
-        <Button Grid.Column="0" Grid.Row="1"   Content="Odešli" Command="{Binding SendCommand}"/>
-        <TextBox Grid.Row="0" Text="{Binding Jméno}" Margin="114,81,113,116.8" />
-        <TextBox Grid.Row="0" Text="{Binding Rc}" Margin="114,140,113,57.8" />
-        <DatePicker Margin="60,71,106,30.8" Grid.Column="1"/>
-        <TextBlock Text="Jméno a příjmení:" Margin="10,81,291,116.8" Background="White"/>
-        <TextBlock Text="Rodné číslo:" Margin="10,140,291,57.8" Background="White"/>
-        <TextBlock Text="Datum narození:" Margin="60,33,241,164.8" Background="White" Grid.Column="1"/>
+        <Button Grid.Column="1" Grid.Row="2" Content="Ukaž" Click="Button_Click"/>
+        <Button Grid.Column="0" Grid.Row="2"   Content="Odešli" Command="{Binding SendCommand}"/>
+        <TextBox Grid.Row="0" Text="{Binding Jméno}" Margin="0,43,0,0" />
+        <TextBox Grid.Row="1" Text="{Binding Rc}" Margin="0,45,0,224.6" Grid.RowSpan="2" />
+        <DatePicker Margin="0,66,0,4.8" Grid.Column="1" DisplayDate="{Binding Datum}" Grid.RowSpan="2"/>
+        <Label Content="Jméno a příjmení:" Margin="0,0,0,69" Background="White"/>
+        <Label Content="Rodné číslo:" Margin="0,0,0,67.8" Background="White" Grid.Row="1"/>
+        <Label Content="Datum narození:" Margin="0,0,0,46" Background="White" Grid.Column="1"/>
     </Grid>
 
 </Page>

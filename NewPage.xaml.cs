@@ -35,8 +35,8 @@ namespace DesignPaterns
             foreach (var z in ZpravaModel.ZpravaDatabase.VsechnyZpravy)
             {
 
-                sb.Append(z + "\n");
-                sb.Append("\n");
+                sb.Append(z.Value.ToString() + "\n");
+                
             }
             MessageBox.Show(sb.ToString());
         }
@@ -54,14 +54,15 @@ namespace DesignPaterns
         {
             if (ZpravaModel.ZpravaDatabase.VsechnyZpravy.Count == 0)
             {
-                Jmeno = "";
+                Jmeno = "Test Novák";
             }
             else
             {
-                Jmeno = jmeno;
+               
             }
         }
-
+        private string j;
+        private string p;
         private string jmeno;
         private string rc;
         private DateTime datum;
@@ -73,6 +74,9 @@ namespace DesignPaterns
             set
             {
                 jmeno = value;
+                string[] sp = value.Split(' ');
+                j = sp[0];
+                p = sp[1];
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Jmeno)));
             }
         }
@@ -111,10 +115,9 @@ namespace DesignPaterns
                     _sendCommand = new RelayCommand(
                         () => {
                             Debug.WriteLine(Jmeno);
-                            string[] sp = jmeno.Split(' ');
-                            string j = sp[0];
-                            string p = sp[1];
-                            ZpravaModel.ZpravaDatabase.VsechnyZpravy[jmeno] = new Person(j,p,Rc,Datum.ToString());
+                            Debug.WriteLine(Rc);
+                            Debug.WriteLine(Datum);
+                            ZpravaModel.ZpravaDatabase.VsechnyZpravy[Jmeno] = new Person(j,p,Rc,Datum.ToString());
 
                         });
                     
@@ -161,6 +164,10 @@ namespace DesignPaterns
             Datum = datum;
         }
 
+        public override string ToString()
+        {
+            return $"{Jmeno} {Prijmeni},Rodné číslo: {Rc},Narozen: {Datum}";
+        }
         public string Jmeno { get; set; }
         public string Prijmeni { get; set; }
         public string Rc { get; set; }
