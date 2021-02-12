@@ -185,9 +185,12 @@ namespace DesignPaterns
 
     public class Person
     {
-        readonly IDateValidator vekValidator;
-        readonly IStringValidator surnameValidator;
-        public Person(string jmeno,string prijmeni, string rc, string datum)
+        readonly IDateValidator datumValidator;
+        readonly IStringValidator pValidator;
+        readonly IStringValidator jValidator;
+        readonly IStringValidator rcValidator;
+
+        public Person(string jmeno,string prijmeni, string rc, string datum,)
         {
             Jmeno = jmeno;
             Prijmeni = prijmeni;
