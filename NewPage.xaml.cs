@@ -52,13 +52,22 @@ namespace DesignPaterns
 
         public ZpravaViewModel()
         {
-            if (ZpravaModel.ZpravaDatabase.VsechnyZpravy.Count == 0)
+            if (ZpravaModel.ZpravaDatabase.VsechnyZpravy.Keys.Count == 0)
             {
-                Jmeno = "Test Novák";
+                Jmeno = "";
             }
             else
             {
-               
+                int ic = 0;
+                Dictionary<string, object>.KeyCollection kc = ZpravaModel.ZpravaDatabase.VsechnyZpravy.Keys;
+                foreach (var key in kc)
+                {
+                    if (ic == ZpravaModel.ZpravaDatabase.VsechnyZpravy.Count-1)
+                    {
+                        ZpravaModel.ZpravaDatabase.VsechnyZpravy[key] = new Person(j, p, Rc, Datum.ToString());
+                    }
+                    ic++;
+                }
             }
         }
         private string j;
@@ -74,9 +83,18 @@ namespace DesignPaterns
             set
             {
                 jmeno = value;
+                if (value.Contains(' '))
+                {
                 string[] sp = value.Split(' ');
                 j = sp[0];
                 p = sp[1];
+                }
+                else
+                {
+                    j = value;
+                    p = "";
+                }
+
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Jmeno)));
             }
         }
@@ -101,7 +119,7 @@ namespace DesignPaterns
         }
 
         private static ICommand _sendCommand;
-        public int i = 0;
+        
 
         // SendCommand je bindovaný z GUI
         public ICommand SendCommand
