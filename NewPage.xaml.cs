@@ -65,7 +65,7 @@ namespace DesignPaterns
                 {
                     if (ic == ZpravaModel.ZpravaDatabase.VsechnyZpravy.Count-1)
                     {
-                        ZpravaModel.ZpravaDatabase.VsechnyZpravy[key] = new Person(j, p, Rc, Datum.ToString());
+                        Jmeno = ZpravaModel.ZpravaDatabase.VsechnyZpravy[key].ToString().Split(',')[0];
                     }
                     ic++;
                 }
@@ -136,7 +136,24 @@ namespace DesignPaterns
                             Debug.WriteLine(Jmeno);
                             Debug.WriteLine(Rc);
                             Debug.WriteLine(Datum);
-                            ZpravaModel.ZpravaDatabase.VsechnyZpravy[Jmeno] = new Person(j,p,Rc,Datum.ToString());
+                            Person person;
+                            if (Datum > new DateTime(1954,1,1))
+                            {
+                                 person = new Person(new JPValidator(), new JPValidator(), new DatumValidator(), new Rc55Validator(), j, p, Rc, Datum.ToString());                               
+                            }
+                            else
+                            {
+                                 person = new Person(new JPValidator(), new JPValidator(), new DatumValidator(), new Rc55Validator(), j, p, Rc, Datum.ToString());
+                            }
+                            if (person.Control(out string err))
+                            {
+                                ZpravaModel.ZpravaDatabase.VsechnyZpravy[Jmeno] = person;
+                            }
+                            else
+                            {
+                                MessageBox.Show($"Zadal jsi špatně {err}");
+                            }
+
 
                         });
                     
@@ -173,13 +190,13 @@ namespace DesignPaterns
         public Dictionary<string, object> VsechnyZpravy;
     }
 
-    interface IStringValidator
+    public interface IStringValidator
     {
         bool IsValid(string s);
     }
-    interface IDateValidator
+    public interface IDateValidator
     {
-        bool IsValidAbove(string s, out bool nadpod);
+        bool IsValidAbove(string s);
     }
 
 
@@ -190,16 +207,46 @@ namespace DesignPaterns
         readonly IStringValidator jValidator;
         readonly IStringValidator rcValidator;
 
-        public Person(string jmeno,string prijmeni, string rc, string datum, IStringValidator prijmeni_val, IStringValidator jmeno_val, IDateValidator datum_val, IStringValidator rc_val)
+        public Person(IStringValidator prijmeni_val, IStringValidator jmeno_val, IDateValidator datum_val, IStringValidator rc_val, string jmeno,string prijmeni, string rc, string datum)
         {
-            Jmeno = jmeno;
-            Prijmeni = prijmeni;
-            Rc = rc;
-            Datum = datum;
             pValidator = prijmeni_val;
             jValidator = jmeno_val;
             datumValidator = datum_val;
             rcValidator = rc_val;
+            Jmeno = jmeno;
+            Prijmeni = prijmeni;
+            Rc = rc;
+            Datum = datum;
+        }
+
+        public bool Control(out string err)
+        {
+            if (!jValidator.IsValid(Jmeno))
+            {
+                err = "jméno";
+                return false;
+            }
+            else if (!pValidator.IsValid(Prijmeni))
+            {
+                err = "příjmení";
+                return false;
+            }
+            else if (!rcValidator.IsValid(Rc))
+            {
+                err = "rodné číslo";
+                return false;
+            }
+            else if (!datumValidator.IsValidAbove(Datum.ToString()))
+            {
+                err = "datum";
+                return false;
+            }
+            else
+            {
+                err = "";
+                return true;
+            }
+
 
         }
 
@@ -213,48 +260,62 @@ namespace DesignPaterns
         public string Datum{ get; set; }
 
     }
-    class Rc55Validator : IStringValidator
+    public class Rc55Validator : IStringValidator
     {
         public bool IsValid(string s) 
         {
-          Regex rx = new Regex(@"\D\D\D\D\D\D/\D\D\D\D", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            return rx.IsMatch(s);
+            string[] sp = s.Split('/');
+            if (sp[0].Length == 6 && sp[1].Length == 4)
+            {
+                return Int32.TryParse(sp[0], out int i) && Int32.TryParse(sp[1], out int i1);
+            }
+            else
+            {
+                return false;
+            }
         }
     }
-    class Rc54Validator : IStringValidator
+    public class Rc54Validator : IStringValidator
     {
         public bool IsValid(string s)
         {
-            Regex rx = new Regex(@"\D\D\D\D\D\D/\D\D\D", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            return rx.IsMatch(s);
+            if (s.Contains('/'))
+            {
+                string[] sp = s.Split('/');
+                if (sp[0].Length == 6 && sp[1].Length == 3)
+                {
+                    return Int32.TryParse(sp[0], out int i) && Int32.TryParse(sp[1], out int i1);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            
         }
     }
-    class JPValidator : IStringValidator
+    public class JPValidator : IStringValidator
     {
         public bool IsValid(string s)
         {
                 return (!s.Contains(' ') && s.Length > 1);            
         }
     }
-    class DatumValidator : IDateValidator
+    public class DatumValidator : IDateValidator
     {
-        public bool IsValidAbove(string s, out bool nadpod)
+        public bool IsValidAbove(string s)
         {
             if (DateTime.TryParse(s,out DateTime d))
             {
-                if (d.Date > new DateTime(1954,1,1))
-                {
-                    nadpod = true;
-                }
-                else
-                {
-                    nadpod = false;
-                }
                 return true;
             }
             else
-            {
-                nadpod = false;
+            {                
                 return false;                
             }
 
