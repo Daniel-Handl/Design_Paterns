@@ -190,12 +190,17 @@ namespace DesignPaterns
         readonly IStringValidator jValidator;
         readonly IStringValidator rcValidator;
 
-        public Person(string jmeno,string prijmeni, string rc, string datum,)
+        public Person(string jmeno,string prijmeni, string rc, string datum, IStringValidator prijmeni_val, IStringValidator jmeno_val, IDateValidator datum_val, IStringValidator rc_val)
         {
             Jmeno = jmeno;
             Prijmeni = prijmeni;
             Rc = rc;
             Datum = datum;
+            pValidator = prijmeni_val;
+            jValidator = jmeno_val;
+            datumValidator = datum_val;
+            rcValidator = rc_val;
+
         }
 
         public override string ToString()
