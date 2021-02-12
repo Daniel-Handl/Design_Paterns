@@ -1,0 +1,31 @@
+﻿<Page x:Class="DesignPaterns.NewPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DesignPaterns"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="NewPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Button Grid.Column="1" Grid.Row="1" Content="Ukaž" Click="Button_Click"/>
+        <Button Grid.Column="0" Grid.Row="1"   Content="Odešli" Command="{Binding SendCommand}"/>
+        <TextBox Grid.Row="0" Text="{Binding Jméno}" Margin="114,81,113,116.8" />
+        <TextBox Grid.Row="0" Text="{Binding Rc}" Margin="114,140,113,57.8" />
+        <DatePicker Margin="60,71,106,30.8" Grid.Column="1"/>
+        <TextBlock Text="Jméno a příjmení:" Margin="10,81,291,116.8" Background="White"/>
+        <TextBlock Text="Rodné číslo:" Margin="10,140,291,57.8" Background="White"/>
+        <TextBlock Text="Datum narození:" Margin="60,33,241,164.8" Background="White" Grid.Column="1"/>
+    </Grid>
+
+</Page>

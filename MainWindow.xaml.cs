@@ -24,5 +24,21 @@ namespace DesignPaterns
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+          NewPage newPage = new NewPage();
+            this.Content = newPage;
+
+        }
+
+
     }
+
+
+
+
+
+
+
 }

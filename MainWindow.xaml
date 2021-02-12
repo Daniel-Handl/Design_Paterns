@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Button Margin="10,10,9.6,10" Content="Otevří nové okno"   Click="Button_Click"/>
     </Grid>
 </Window>
