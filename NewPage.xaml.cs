@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using GalaSoft.MvvmLight.Command;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace DesignPaterns
 {
@@ -172,8 +173,20 @@ namespace DesignPaterns
         public Dictionary<string, object> VsechnyZpravy;
     }
 
+    interface IStringValidator
+    {
+        bool IsValid(string s);
+    }
+    interface IDateValidator
+    {
+        bool IsValidAbove(string s, out bool nadpod);
+    }
+
+
     public class Person
     {
+        readonly IDateValidator vekValidator;
+        readonly IStringValidator surnameValidator;
         public Person(string jmeno,string prijmeni, string rc, string datum)
         {
             Jmeno = jmeno;
@@ -192,5 +205,55 @@ namespace DesignPaterns
         public string Datum{ get; set; }
 
     }
+    class Rc55Validator : IStringValidator
+    {
+        public bool IsValid(string s) 
+        {
+          Regex rx = new Regex(@"\D\D\D\D\D\D/\D\D\D\D", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            return rx.IsMatch(s);
+        }
+    }
+    class Rc54Validator : IStringValidator
+    {
+        public bool IsValid(string s)
+        {
+            Regex rx = new Regex(@"\D\D\D\D\D\D/\D\D\D", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            return rx.IsMatch(s);
+        }
+    }
+    class JPValidator : IStringValidator
+    {
+        public bool IsValid(string s)
+        {
+                return (!s.Contains(' ') && s.Length > 1);            
+        }
+    }
+    class DatumValidator : IDateValidator
+    {
+        public bool IsValidAbove(string s, out bool nadpod)
+        {
+            if (DateTime.TryParse(s,out DateTime d))
+            {
+                if (d.Date > new DateTime(1954,1,1))
+                {
+                    nadpod = true;
+                }
+                else
+                {
+                    nadpod = false;
+                }
+                return true;
+            }
+            else
+            {
+                nadpod = false;
+                return false;                
+            }
+
+
+        }
+    }
+
+
 
 }
